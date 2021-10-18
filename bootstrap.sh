@@ -28,7 +28,7 @@ PE_HOST=${PE_HOST} \
 PRISM_ADMIN=${PRISM_ADMIN} \
 PE_PASSWORD=${PE_PASSWORD} \
 MY_WORKSHOP="ws1"
-./stage-cluster.sh -f - ${MY_WORKSHOP} # \
+./stage_cluster.sh -f - ${MY_WORKSHOP} # \
 #  && popd || exit
 
 echo -e "\n    DONE: ${0} ran for ${SECONDS} seconds."
