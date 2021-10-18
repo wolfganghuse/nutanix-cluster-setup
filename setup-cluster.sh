@@ -9,18 +9,12 @@ curl --remote-name --location ${ARCHIVE} \
   && echo "Success: ${ARCHIVE##*/}" \
   && unzip ${ARCHIVE##*/}
 
-pushd ${REPOSITORY}-${BRANCH}/ \
+pushd ${REPOSITORY}-${BRANCH}/scripts \
 && chmod -R u+x *.sh
 
 # Source Nutanix environment (PATH + aliases), then common routines + global variables
-echo A
-pwd
-echo Y
-ls -al
-echo XXX
-
 . /etc/profile.d/nutanix_env.sh
-. ~/scripts/lib.common.sh
+. lib.common.sh
 . lib.pe.sh
 
 ncli=/home/nutanix/prism/cli/ncli
