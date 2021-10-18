@@ -56,6 +56,7 @@ SMTP_SERVER_FROM=wolfgang@nutanix.com
 SMTP_SERVER_PORT=25
 ATTEMPTS=40
 SLEEP=60
+CURL_OPTS='--insecure --silent --show-error'
 
 # discover available nodes
 echo Discovering nodes ...
@@ -63,7 +64,7 @@ echo Discovering nodes ...
 
 # create cluster
 echo Creating cluster ...
-/usr/local/nutanix/cluster/bin/cluster -s $cvm_ips create --redundancy_factor=2
+# /usr/local/nutanix/cluster/bin/cluster -s $cvm_ips create --redundancy_factor=2
 
 # pause while Prism services restart
 echo Pausing for 30s while Prism services start ...
