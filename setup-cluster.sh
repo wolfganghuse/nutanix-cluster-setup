@@ -4,8 +4,8 @@
 curl --remote-name --location https://raw.githubusercontent.com/wolfganghuse/nutanix-cluster-setup/master/scripts/lib.common.sh
 curl --remote-name --location https://raw.githubusercontent.com/wolfganghuse/nutanix-cluster-setup/master/scripts/lib.pe.sh
 
-. lib.common.sh
-. lib.pe.sh
+source lib.common.sh
+source lib.pe.sh
 ##run from CVM:
 ## curl --remote-name --location https://raw.githubusercontent.com/wolfganghuse/nutanix-cluster-setup/master/setup-cluster.sh && sh ${_##*/}
 
