@@ -7,7 +7,7 @@ ARCHIVE=https://github.com/wolfganghuse/${REPOSITORY}/archive/${BRANCH}.zip
 
 curl --remote-name --location ${ARCHIVE} \
   && echo "Success: ${ARCHIVE##*/}" \
-  && unzip ${ARCHIVE##*/}
+  && unzip -j ${ARCHIVE##*/}
 
 pushd ${REPOSITORY}-${BRANCH} \
 && chmod -R u+x *.sh
