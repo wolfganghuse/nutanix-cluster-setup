@@ -14,8 +14,8 @@ pushd ${REPOSITORY}-${BRANCH}/ \
 
 # Source Nutanix environment (PATH + aliases), then common routines + global variables
 . /etc/profile.d/nutanix_env.sh
-. scripts/lib.common.sh
-. scripts/lib.pe.sh
+. lib.common.sh
+. lib.pe.sh
 
 ncli=/home/nutanix/prism/cli/ncli
 acli=/usr/local/nutanix/bin/acli
