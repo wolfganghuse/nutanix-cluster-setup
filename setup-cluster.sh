@@ -13,9 +13,9 @@ chmod u+x *.sh
 
 # Source Nutanix environment (PATH + aliases), then common routines + global variables
 source /etc/profile.d/nutanix_env.sh
-source global.vars.sh
-source lib.common.sh
-source lib.pe.sh
+source ./global.vars.sh
+source ./lib.common.sh
+source ./lib.pe.sh
 
 # discover available nodes
 echo Discovering nodes ...
