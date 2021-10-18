@@ -24,8 +24,6 @@ cvm_ips=172.23.2.2
 cluster_name=NTNX-Demo
 cluster_ip=172.23.1.121
 DATA_SERVICE_IP=172.23.1.122
-dns_ip=172.23.0.23
-ntp_server=time.google.com
 timezone=Europe/Berlin
 STORAGE_POOL=sp1
 STORAGE_DEFAULT=Default
@@ -43,6 +41,9 @@ NW1_SUBNET="172.23.0.0/16"
 NW1_GATEWAY="172.23.0.1"
 NW1_DHCP_START="172.23.108.140"
 NW1_DHCP_END="172.23.108.140"
+AUTH_DOMAIN='ntnxlab.local'
+AUTH_HOST='172.23.108.139'
+IPV4_PREFIX='172.23.108'
 
 centos7_vm_name=CentOS7-VM
 centos7_vm_disk_size=20G
@@ -59,10 +60,13 @@ SLEEP=60
 CURL_OPTS='--insecure --silent --show-error' # --verbose'
 CURL_POST_OPTS="${CURL_OPTS} --max-time 5 --header Content-Type:application/json --header Accept:application/json --output /dev/null"
 CURL_HTTP_OPTS="${CURL_POST_OPTS} --write-out %{http_code}"
+DNS_SERVERS='172.23.0.23'
+NTP_SERVERS='0.us.pool.ntp.org,1.us.pool.ntp.org,2.us.pool.ntp.org,3.us.pool.ntp.org'
+
 
 # discover available nodes
 echo Discovering nodes ...
-/usr/local/nutanix/cluster/bin/discover_nodes
+#/usr/local/nutanix/cluster/bin/discover_nodes
 
 # create cluster
 echo Creating cluster ...
