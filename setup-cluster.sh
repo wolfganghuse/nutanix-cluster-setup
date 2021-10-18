@@ -13,8 +13,11 @@ pushd ${REPOSITORY}-${BRANCH}/ \
 && chmod -R u+x *.sh
 
 # Source Nutanix environment (PATH + aliases), then common routines + global variables
+pwd
+ls -al
+
 . /etc/profile.d/nutanix_env.sh
-. lib.common.sh
+. ~/scripts/lib.common.sh
 . lib.pe.sh
 
 ncli=/home/nutanix/prism/cli/ncli
