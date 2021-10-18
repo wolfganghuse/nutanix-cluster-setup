@@ -5,7 +5,7 @@ DEBUG=
 # Source Workshop common routines + global variables
 . scripts/lib.common.sh
 . scripts/global.vars.sh
-begin
+
 
 function stage_clusters() {
   local      _cluster
@@ -20,7 +20,7 @@ function stage_clusters() {
  
   export PC_VERSION="${PC_STABLE_VERSION}"
 
-  
+  echo stagefunction
   _libraries+='lib.pe.sh lib.pc.sh'
   _pe_launch='setup-cluster.sh'
   _pc_launch=${_pe_launch}
@@ -69,4 +69,5 @@ function validate_clusters() {
 
 #__main__
 
+echo Start Stage
 stage_clusters
