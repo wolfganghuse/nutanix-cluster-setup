@@ -709,12 +709,6 @@ function pc_install() {
       log "IDEMPOTENCY: PC-${PC_VERSION} upload already completed."
     fi
 
-    # shellcheck disable=2206
-    _pc_version=(${PC_VERSION//./ })
-    if (( ${_pc_version[0]} == 5 && ${_pc_version[1]} <= 6 )); then
-      _should_auto_register='"should_auto_register":true,'
-    fi
-
     log "Deploy Prism Central (typically takes 17+ minutes)..."
     # TODO:160 make scale-out & dynamic, was: 4vCPU/16GB = 17179869184, 8vCPU/40GB = 42949672960
     # Sizing suggestions, certified configurations:
@@ -724,7 +718,7 @@ function pc_install() {
     HTTP_BODY=$(cat <<EOF
 {
   "resources": {
-    ${_should_auto_register}
+    "should_auto_register":false,
     "version":"${PC_VERSION}",
     "pc_vm_list":[{
       "data_disk_size_bytes":536870912000,
@@ -750,7 +744,7 @@ EOF
     _test=$(curl ${CURL_POST_OPTS} --user ${PRISM_ADMIN}:${PE_PASSWORD} \
       -X POST --data "${HTTP_BODY}" \
       https://localhost:9440/api/nutanix/v3/prism_central)
-    #log "_test=|${_test}|"
+    log "_test=|${_test}|"
   fi
 }
 

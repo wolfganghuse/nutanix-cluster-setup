@@ -4,6 +4,7 @@ acli=/usr/local/nutanix/bin/acli
 cvm_ips=172.23.2.2
 CLUSTER_NAME=NTNX-Demo
 PE_HOST=172.23.1.121
+PC_HOST=172.23.1.123
 DATA_SERVICE_IP=172.23.1.122
 timezone=Europe/Berlin
 STORAGE_POOL=sp1

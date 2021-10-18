@@ -38,11 +38,41 @@ dependencies 'install' 'sshpass' && dependencies 'install' 'jq' \
 pe_license \
 && pe_init \
 && network_configure \
-&& authentication_source
+&& authentication_source \
+&& pe_auth
 
-pause
-pc_install "${NW1_NAME}" \
-&& prism_check 'PC'
+if (( $? == 0 )) ; then
+    pc_install "${NW1_NAME}" \
+    && prism_check 'PC' \
+
+    if (( $? == 0 )) ; then
+        _command="EMAIL=${EMAIL} \
+        PC_HOST=${PC_HOST} PE_HOST=${PE_HOST} PE_PASSWORD=${PE_PASSWORD} \
+        PC_LAUNCH=${PC_LAUNCH} PC_VERSION=${PC_VERSION} nohup bash ${HOME}/${PC_LAUNCH} IMAGES"
+
+    cluster_check \
+    && log "Remote asynchroneous PC Image import script... ${_command}" \
+    && remote_exec 'ssh' 'PC' "${_command} >> ${HOME}/${PC_LAUNCH%%.sh}.log 2>&1 &" &
+
+    pc_configure \
+    && log "PC Configuration complete: Waiting for PC deployment to complete, API is up!"
+    log "PE = https://${PE_HOST}:9440"
+    log "PC = https://${PC_HOST}:9440"
+
+    files_install && sleep 30
+
+    create_file_server "${NW1_NAME}" "${NW2_NAME}" && sleep 30
+
+    file_analytics_install && sleep 30 && dependencies 'remove' 'jq' & # parallel, optional. Versus: $0 'files' &
+    #dependencies 'remove' 'sshpass'
+    finish
+    fi
+else
+    finish
+    _error=18
+    log "Error ${_error}: in main functional chain, exit!"
+    exit ${_error}
+fi
 
 exit 
 
