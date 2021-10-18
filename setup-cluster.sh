@@ -30,7 +30,8 @@ domain_name=ntnxlab.local
 centos7_vm_name=CentOS7-VM
 centos7_vm_disk_size=20G
 PRISM_ADMIN=admin
-PE_PASSWORD=nutanix/4u
+PE_PASSWORD=nx2Tech100!
+PE_DEFAULTPW=Nutanix/4u
 CURL_HTTP_OPTS=' --max-time 25 --silent --header Content-Type:application/json --header Accept:application/json  --insecure '
 
 
@@ -59,7 +60,10 @@ $ncli cluster add-to-ntp-servers servers="$ntp_server"
 echo Setting cluster time zone ...
 $ncli cluster set-timezone timezone=$timezone force=true
 
-# PC Validate/License
+# Change default Credential
+$ncli user change-password current-password="${PE_DEFAULTPW}" new-password="${PE_PASSWORD}"
+
+# PE Validate/License
 _test=$(curl $CURL_HTTP_OPTS --user ${PRISM_ADMIN}:${PE_PASSWORD} -X POST --data '{
     "username": "Huse/Automated",
     "companyName": "Nutanix",
