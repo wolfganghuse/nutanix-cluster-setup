@@ -9,7 +9,7 @@ curl --remote-name --location ${ARCHIVE} \
   && echo "Success: ${ARCHIVE##*/}" \
   && unzip -j ${ARCHIVE##*/}
 
-chmod -R u+x *.sh
+chmod u+x *.sh
 
 # Source Nutanix environment (PATH + aliases), then common routines + global variables
 source /etc/profile.d/nutanix_env.sh
