@@ -10,11 +10,8 @@ BRANCH=master
 BASE_URL=https://github.com/${ORGANIZATION}/${REPOSITORY}
 ARCHIVE=${BASE_URL}/archive/${BRANCH}.zip
 
-. /etc/profile.d/nutanix_env.sh || _ERROR=1
+. /etc/profile.d/nutanix_env.sh
 
-if (( ${_ERROR} == 1 )); then
-  echo "Error ${_ERROR}: This script should be run on a Nutanix CVM!"
-  #echo RESTORE:
 
 #########################################################################
 ### Added to verify user is Nutanix 7/22/2019 from mlavi version of file.
