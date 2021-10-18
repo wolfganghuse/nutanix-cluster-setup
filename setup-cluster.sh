@@ -43,7 +43,7 @@ $ncli cluster edit-params new-name="$cluster_name" external-ip-address="$cluster
 
 
 #pe_init
-dependencies 'install' 'jq' \
+dependencies 'install' 'sshpass' && dependencies 'install' 'jq' \
 pe_license \
 && pe_init \
 && network_configure \

@@ -46,6 +46,10 @@ SLEEP=60
 CURL_OPTS='--insecure --silent --show-error' # --verbose'
 CURL_POST_OPTS="${CURL_OPTS} --max-time 5 --header Content-Type:application/json --header Accept:application/json --output /dev/null"
 CURL_HTTP_OPTS="${CURL_POST_OPTS} --write-out %{http_code}"
+SSH_OPTS='-o StrictHostKeyChecking=no -o GlobalKnownHostsFile=/dev/null -o UserKnownHostsFile=/dev/null'
+SSH_OPTS+=' -q' # -v'
+
+
 DNS_SERVERS='172.23.0.23'
 NTP_SERVERS='0.us.pool.ntp.org,1.us.pool.ntp.org,2.us.pool.ntp.org,3.us.pool.ntp.org'
 OS_NAME='"centos"'
@@ -55,5 +59,9 @@ JQ_REPOS=(\
 AUTODC_REPOS=(\
     'http://iso-store.objects-clu1.ntnx.test/autodc-2.0.qcow2' \
 )
+SSHPASS_REPOS=(\
+       'http://mirror.centos.org/centos/7/extras/x86_64/Packages/sshpass-1.06-2.el7.x86_64.rpm' \
+    )
 PC_CURRENT_METAURL='http://iso-store.objects-clu1.ntnx.test/pc.2021.9-metadata.json'
 PC_CURRENT_URL='http://iso-store.objects-clu1.ntnx.test/pc.2021.9.tar'
+
