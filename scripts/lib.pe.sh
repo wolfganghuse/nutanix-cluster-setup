@@ -839,7 +839,11 @@ function pe_init() {
       || ncli container create name="${STORAGE_IMAGES}" sp-name="${STORAGE_POOL}"
 
     # Set external IP address:
-    #ncli cluster edit-params external-ip-address=${PE_HOST}
+    log "Set External IP to ${PE_HOST}"
+    ncli cluster edit-params external-ip-address=${PE_HOST}
+
+    log "Set Cluster Name to ${CLUSTER_NAME}"
+    ncli cluster edit-params new-name="$CLUSTER_NAME"
 
     log "Set Data Services IP address to ${DATA_SERVICE_IP}"
     ncli cluster edit-params external-data-services-ip-address=${DATA_SERVICE_IP}

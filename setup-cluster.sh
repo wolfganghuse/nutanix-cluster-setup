@@ -33,15 +33,6 @@ sleep 30s
 # Change default Credential
 $ncli user change-password current-password="${PE_DEFAULTPW}" new-password="${PE_PASSWORD}"
 
-# specify DNS and NTP servers
-echo Adding DNS and NTP servers ...
-$ncli cluster add-to-name-servers servers="$DNS_SERVERS"
-
-# rename cluster
-echo Setting cluster name and adding cluster external IP ipAddresses
-$ncli cluster edit-params new-name="$cluster_name" external-ip-address="$PE_HOST"
-
-
 #pe_init
 dependencies 'install' 'sshpass' && dependencies 'install' 'jq' \
 pe_license \
