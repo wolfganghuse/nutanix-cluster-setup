@@ -3,7 +3,7 @@ acli=/usr/local/nutanix/bin/acli
 #cvm_ips=10.120.100.30,10.120.100.31,10.120.100.32,10.120.100.33
 cvm_ips=172.23.2.2
 cluster_name=NTNX-Demo
-cluster_ip=172.23.1.121
+PE_HOST=172.23.1.121
 DATA_SERVICE_IP=172.23.1.122
 timezone=Europe/Berlin
 STORAGE_POOL=sp1
@@ -12,6 +12,9 @@ STORAGE_IMAGES=Images
 centos_image=CentOS7-Install
 centos_annotation="CentOS7-Installation-ISO"
 centos_source=http://iso-store.objects-clu1.ntnx.test/CentOS7-2009.qcow2
+
+OCTET=(${PE_HOST//./ }) # zero index
+
 NW1_NAME='Primary'
 NW1_VLAN=0
 NW1_SUBNET="172.23.0.1/16"

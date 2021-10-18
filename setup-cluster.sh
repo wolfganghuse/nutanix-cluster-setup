@@ -39,7 +39,7 @@ $ncli cluster add-to-name-servers servers="$DNS_SERVERS"
 
 # rename cluster
 echo Setting cluster name and adding cluster external IP ipAddresses
-$ncli cluster edit-params new-name="$cluster_name" external-ip-address="$cluster_ip"
+$ncli cluster edit-params new-name="$cluster_name" external-ip-address="$PE_HOST"
 
 
 #pe_init
@@ -58,7 +58,7 @@ exit
 pause
 # rename cluster
 echo Setting cluster name, adding cluster external IP address and adding cluster external data services IP address ...
-$ncli cluster edit-params new-name="$cluster_name" external-ip-address="$cluster_ip" external-data-services-ip-address="$cluster_ds_ip"
+$ncli cluster edit-params new-name="$cluster_name" external-ip-address="$PE_HOST" external-data-services-ip-address="$DATA_SERVICE_IP"
 
 # specify DNS and NTP servers
 echo Adding DNS and NTP servers ...
