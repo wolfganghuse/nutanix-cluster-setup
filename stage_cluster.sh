@@ -31,7 +31,7 @@ function stage_clusters() {
   pe_configuration_args "${_pc_launch}"
 
   pushd scripts || true
-  eval "${PE_CONFIGURATION} ./${_pe_launch} 'PE'" >> ${HOME}/${_pe_launch%%.sh}.log 2>&1 &
+  eval "${PE_CONFIGURATION} ./${_pe_launch} 'PE'" #>> ${HOME}/${_pe_launch%%.sh}.log 2>&1 &
   unset PE_CONFIGURATION
   popd || true
   finish
