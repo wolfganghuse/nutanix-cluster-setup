@@ -56,7 +56,9 @@ SMTP_SERVER_FROM=wolfgang@nutanix.com
 SMTP_SERVER_PORT=25
 ATTEMPTS=40
 SLEEP=60
-CURL_OPTS='--insecure --silent --show-error'
+CURL_OPTS='--insecure --silent --show-error' # --verbose'
+CURL_POST_OPTS="${CURL_OPTS} --max-time 5 --header Content-Type:application/json --header Accept:application/json --output /dev/null"
+CURL_HTTP_OPTS="${CURL_POST_OPTS} --write-out %{http_code}"
 
 # discover available nodes
 echo Discovering nodes ...
@@ -68,7 +70,7 @@ echo Creating cluster ...
 
 # pause while Prism services restart
 echo Pausing for 30s while Prism services start ...
-sleep 30s
+#sleep 30s
 
 #pe_init
 pe_license \
