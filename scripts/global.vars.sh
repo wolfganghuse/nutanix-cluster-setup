@@ -35,6 +35,7 @@ centos7_vm_disk_size=20G
 PRISM_ADMIN=admin
 PE_PASSWORD=nx2Tech100!
 PE_DEFAULTPW=Nutanix/4u
+NTNX_INIT_PASSWORD='nutanix/4u'
 PC_VERSION=PC2021.9
 CURL_HTTP_OPTS=' --max-time 25 --silent --header Content-Type:application/json --header Accept:application/json  --insecure '
 EMAIL=wolfgang@nutanix.com
