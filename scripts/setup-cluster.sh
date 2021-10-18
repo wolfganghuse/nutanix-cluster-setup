@@ -1,8 +1,4 @@
 #!/bin/sh
-##howto run from CVM:
-## curl --remote-name --location https://raw.githubusercontent.com/wolfganghuse/nutanix-cluster-setup/master/setup-cluster.sh && sh ${_##*/}
-REPOSITORY=nutanix-cluster-setup
-BRANCH=master
 ARCHIVE=https://github.com/wolfganghuse/${REPOSITORY}/archive/${BRANCH}.zip
 
 curl --remote-name --location ${ARCHIVE} \
@@ -12,10 +8,10 @@ curl --remote-name --location ${ARCHIVE} \
 chmod u+x *.sh
 
 # Source Nutanix environment (PATH + aliases), then common routines + global variables
-source /etc/profile.d/nutanix_env.sh
-source ./global.vars.sh
-source ./lib.common.sh
-source ./lib.pe.sh
+. /etc/profile.d/nutanix_env.sh
+. global.vars.sh
+. lib.common.sh
+. lib.pe.sh
 
 # discover available nodes
 echo Discovering nodes ...

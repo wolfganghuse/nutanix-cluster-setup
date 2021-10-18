@@ -13,7 +13,7 @@ STORAGE_IMAGES=Images
 centos_image=CentOS7-Install
 centos_annotation="CentOS7-Installation-ISO"
 centos_source=http://iso-store.objects-clu1.ntnx.test/CentOS7-2009.qcow2
-
+SSH_PUBKEY="${HOME}/.ssh/id_rsa.pub"
 OCTET=(${PE_HOST//./ }) # zero index
 
 NW1_NAME='Primary'
