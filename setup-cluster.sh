@@ -1,13 +1,15 @@
 #!/bin/sh
+##howto run from CVM:
+## curl --remote-name --location https://raw.githubusercontent.com/wolfganghuse/nutanix-cluster-setup/master/setup-cluster.sh && sh ${_##*/}
 
-#source functions
+
+# Source Nutanix environment (PATH + aliases), then common routines + global variables
 curl --remote-name --location https://raw.githubusercontent.com/wolfganghuse/nutanix-cluster-setup/master/scripts/lib.common.sh
 curl --remote-name --location https://raw.githubusercontent.com/wolfganghuse/nutanix-cluster-setup/master/scripts/lib.pe.sh
 
-source lib.common.sh
-source lib.pe.sh
-##run from CVM:
-## curl --remote-name --location https://raw.githubusercontent.com/wolfganghuse/nutanix-cluster-setup/master/setup-cluster.sh && sh ${_##*/}
+. /etc/profile.d/nutanix_env.sh
+. lib.common.sh
+. lib.pe.sh
 
 ncli=/home/nutanix/prism/cli/ncli
 acli=/usr/local/nutanix/bin/acli
