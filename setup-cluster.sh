@@ -13,8 +13,11 @@ pushd ${REPOSITORY}-${BRANCH}/ \
 && chmod -R u+x *.sh
 
 # Source Nutanix environment (PATH + aliases), then common routines + global variables
+echo A
 pwd
+echo Y
 ls -al
+echo XXX
 
 . /etc/profile.d/nutanix_env.sh
 . ~/scripts/lib.common.sh
