@@ -37,7 +37,7 @@ pc_metadata=http://iso-store.objects-clu1.ntnx.test/pc.2021.9-metadata.json
 pc_bits=http://iso-store.objects-clu1.ntnx.test/pc.2021.9.tar
 NW1_NAME='Primary'
 NW1_VLAN=0
-NW1_SUBNET="172.23.0.0/16"
+NW1_SUBNET="172.23.0.1/16"
 NW1_GATEWAY="172.23.0.1"
 NW1_DHCP_START="172.23.108.140"
 NW1_DHCP_END="172.23.108.140"
@@ -62,6 +62,10 @@ CURL_POST_OPTS="${CURL_OPTS} --max-time 5 --header Content-Type:application/json
 CURL_HTTP_OPTS="${CURL_POST_OPTS} --write-out %{http_code}"
 DNS_SERVERS='172.23.0.23'
 NTP_SERVERS='0.us.pool.ntp.org,1.us.pool.ntp.org,2.us.pool.ntp.org,3.us.pool.ntp.org'
+OS_NAME='"centos"'
+JQ_REPOS=(\
+        'https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64' \
+)
 
 
 # discover available nodes
@@ -70,13 +74,14 @@ echo Discovering nodes ...
 
 # create cluster
 echo Creating cluster ...
-# /usr/local/nutanix/cluster/bin/cluster -s $cvm_ips create --redundancy_factor=2
+/usr/local/nutanix/cluster/bin/cluster -s $cvm_ips create --redundancy_factor=2
 
 # pause while Prism services restart
 echo Pausing for 30s while Prism services start ...
-#sleep 30s
+sleep 30s
 
 #pe_init
+dependencies 'install' 'jq' \
 pe_license \
 && pe_init \
 && network_configure
