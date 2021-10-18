@@ -41,6 +41,7 @@ NW1_SUBNET="172.23.0.1/16"
 NW1_GATEWAY="172.23.0.1"
 NW1_DHCP_START="172.23.108.140"
 NW1_DHCP_END="172.23.108.140"
+AUTH_FQDN='ntnxlab.local'
 AUTH_DOMAIN='ntnxlab.local'
 AUTH_HOST='172.23.108.139'
 IPV4_PREFIX='172.23.108'
@@ -79,6 +80,14 @@ echo Creating cluster ...
 # pause while Prism services restart
 echo Pausing for 30s while Prism services start ...
 sleep 30s
+
+# Change default Credential
+$ncli user change-password current-password="${PE_DEFAULTPW}" new-password="${PE_PASSWORD}"
+
+# specify DNS and NTP servers
+echo Adding DNS and NTP servers ...
+$ncli cluster add-to-name-servers servers="$DNS_SERVERS"
+
 
 #pe_init
 dependencies 'install' 'jq' \
