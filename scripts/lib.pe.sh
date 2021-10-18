@@ -36,76 +36,6 @@ function authentication_source() {
   _pc_version=(${PC_VERSION//./ })
 
   case "${AUTH_SERVER}" in
-    'AutoAD')
-      local    _autoad_auth
-      local   _autoad_index=1
-      local _autoad_release=1
-      local _autoad_service='samba-ad-dc'
-      local _autoad_restart="service ${_autoad_service} restart"
-      local  _autoad_status="AD Is Running"
-      local _autoad_success="AD Is Running"
-
-
-      dns_check "dc.${AUTH_FQDN}"
-      _result=$?
-
-      if (( ${_result} == 0 )); then
-        log "${AUTH_SERVER}.IDEMPOTENCY: dc.${AUTH_FQDN} set, skip. ${_result}"
-      else
-        log "${AUTH_SERVER}.IDEMPOTENCY failed, no DNS record dc.${AUTH_FQDN}"
-
-        _error=12
-         _loop=0
-        _sleep=${SLEEP}
-
-        repo_source AUTOAD_REPOS[@]
-
-        if (( $(source /etc/profile.d/nutanix_env.sh && acli image.list | grep ${AUTH_SERVER}| wc --lines) == 0 )); then
-          log "Import ${AUTH_SERVER} image from ${SOURCE_URL}..."
-          acli image.create ${AUTH_SERVER} \
-            image_type=kDiskImage wait=true \
-            container=${STORAGE_IMAGES} source_url=${SOURCE_URL}
-        else
-          log "Image found, assuming ready. Skipping ${AUTH_SERVER} import."
-        fi
-
-        log "Create ${AUTH_SERVER} VM based on ${AUTH_SERVER} image"
-        acli "vm.create ${AUTH_SERVER} num_vcpus=2 num_cores_per_vcpu=1 memory=4G"
-        # vmstat --wide --unit M --active # suggests 2G sufficient, was 4G
-        #acli "vm.disk_create ${AUTH_SERVER}${_autodc_release} cdrom=true empty=true"
-        acli "vm.disk_create ${AUTH_SERVER} clone_from_image=${AUTH_SERVER}"
-        acli "vm.nic_create ${AUTH_SERVER} network=${NW1_NAME} ip=${AUTH_HOST}"
-
-        log "Power on ${AUTH_SERVER} VM..."
-        acli "vm.on ${AUTH_SERVER}"
-
-        _attempts=45
-            _loop=0
-           _sleep=60
-
-      while true ; do
-        (( _loop++ ))
-
-        _test=$(curl ${CURL_OPTS} -X GET http://${AUTH_HOST}:8000/ | grep "${_autoad_success}")
-        if [[ "${_test}" == "${_autoad_success}" ]]; then
-          log "${AUTH_SERVER} is ready."
-          sleep ${_sleep}
-          break
-        elif (( ${_loop} > ${_attempts} )); then
-          log "Error ${_error}: ${AUTH_SERVER} VM running: giving up after ${_loop} tries."
-          #_result=$(source /etc/profile.d/nutanix_env.sh \
-          #  && for _vm in $(source /etc/profile.d/nutanix_env.sh && acli vm.list | grep ${AUTH_SERVER}) ; do acli -y vm.delete $_vm; done)
-          # acli image.delete ${AUTH_SERVER}${_autodc_release}
-          #log "Remediate by deleting the ${AUTH_SERVER} VM from PE (just attempted by this script: ${_result}) and then running acli $_"
-          exit ${_error}
-        else
-          log "_test ${_loop}/${_attempts}=|${_test}|: sleep ${_sleep} seconds..."
-          sleep ${_sleep}
-        fi
-      done
-
-      fi
-      ;;
     'AutoDC')
       local    _autodc_auth
       local   _autodc_index=1
@@ -115,19 +45,14 @@ function authentication_source() {
       local  _autodc_status="systemctl show ${_autodc_service} --property=SubState"
       local _autodc_success='SubState=running'
 
-      #if (( ${_pc_version[0]} >= 5 && ${_pc_version[1]} >= 9 )); then
-      if (( ${_pc_version[0]} >= 5 && ${_pc_version[1]} >= 8 )); then
-        log "PC_VERSION ${PC_VERSION} >= 5.9, setting AutoDC2..."
-
-           _autodc_auth=" --username=${AUTH_ADMIN_USER} --password=${AUTH_ADMIN_PASS}"
-          _autodc_index=''
-        _autodc_release=2
-        _autodc_service=samba
-        _autodc_restart="sleep 2 && service ${_autodc_service} stop && sleep 5 && service ${_autodc_service} start"
-         _autodc_status="service ${_autodc_service} status"
-        _autodc_success=' * status: started'
-      fi
-
+      _autodc_auth=" --username=${AUTH_ADMIN_USER} --password=${AUTH_ADMIN_PASS}"
+      _autodc_index=''
+      _autodc_release=2
+      _autodc_service=samba
+      _autodc_restart="sleep 2 && service ${_autodc_service} stop && sleep 5 && service ${_autodc_service} start"
+      _autodc_status="service ${_autodc_service} status"
+      _autodc_success=' * status: started'
+    
       dns_check "dc${_autodc_index}.${AUTH_FQDN}"
       _result=$?
 
@@ -226,9 +151,6 @@ function authentication_source() {
          sleep ${_sleep}
 
       fi
-      ;;
-    'OpenLDAP')
-      log "To be documented, see https://drt-it-github-prod-1.eng.nutanix.com/mark-lavi/openldap"
       ;;
   esac
 }

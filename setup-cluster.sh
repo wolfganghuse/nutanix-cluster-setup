@@ -29,22 +29,25 @@ STORAGE_POOL=sp1
 STORAGE_DEFAULT=Default
 STORAGE_IMAGES=Images
 centos_image=CentOS7-Install
-autodc_image=AutoDC-2.0
 centos_annotation="CentOS7-Installation-ISO"
 centos_source=http://iso-store.objects-clu1.ntnx.test/CentOS7-2009.qcow2
-autodc_source=http://iso-store.objects-clu1.ntnx.test/autodc-2.0.qcow2
-pc_metadata=http://iso-store.objects-clu1.ntnx.test/pc.2021.9-metadata.json
-pc_bits=http://iso-store.objects-clu1.ntnx.test/pc.2021.9.tar
 NW1_NAME='Primary'
 NW1_VLAN=0
 NW1_SUBNET="172.23.0.1/16"
 NW1_GATEWAY="172.23.0.1"
 NW1_DHCP_START="172.23.108.140"
 NW1_DHCP_END="172.23.108.140"
-AUTH_FQDN='ntnxlab.local'
-AUTH_DOMAIN='ntnxlab.local'
-AUTH_HOST='172.23.108.139'
 IPV4_PREFIX='172.23.108'
+
+AUTH_SERVER='AutoDC' # default; TODO:180 refactor AUTH_SERVER choice to input file
+AUTH_HOST='172.23.108.139'
+LDAP_PORT=389
+AUTH_FQDN='ntnxlab.local'
+AUTH_DOMAIN='NTNXLAB'
+AUTH_ADMIN_USER='administrator@'${AUTH_FQDN}
+AUTH_ADMIN_PASS='nutanix/4u'
+AUTH_ADMIN_GROUP='SSP Admins'
+
 
 centos7_vm_name=CentOS7-VM
 centos7_vm_disk_size=20G
@@ -67,6 +70,12 @@ OS_NAME='"centos"'
 JQ_REPOS=(\
         'https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64' \
 )
+AUTODC_REPOS=(\
+    'http://iso-store.objects-clu1.ntnx.test/autodc-2.0.qcow2' \
+)
+PC_CURRENT_METAURL='http://iso-store.objects-clu1.ntnx.test/pc.2021.9-metadata.json'
+PC_CURRENT_URL='http://iso-store.objects-clu1.ntnx.test/pc.2021.9.tar'
+
 
 
 # discover available nodes
@@ -88,13 +97,19 @@ $ncli user change-password current-password="${PE_DEFAULTPW}" new-password="${PE
 echo Adding DNS and NTP servers ...
 $ncli cluster add-to-name-servers servers="$DNS_SERVERS"
 
+# rename cluster
+echo Setting cluster name and adding cluster external IP ipAddresses
+$ncli cluster edit-params new-name="$cluster_name" external-ip-address="$cluster_ip"
+
 
 #pe_init
 dependencies 'install' 'jq' \
 pe_license \
 && pe_init \
-&& network_configure
+&& network_configure \
+&& authentication_source
 
+pause
 pc_install "${NW1_NAME}" \
 && prism_check 'PC'
 
