@@ -1,7 +1,6 @@
 ncli=/home/nutanix/prism/cli/ncli
 acli=/usr/local/nutanix/bin/acli
-#cvm_ips=10.120.100.30,10.120.100.31,10.120.100.32,10.120.100.33
-cvm_ips=172.23.2.2
+
 CLUSTER_NAME=NTNX-Demo
 PE_HOST=172.23.1.121
 PC_HOST=172.23.1.123

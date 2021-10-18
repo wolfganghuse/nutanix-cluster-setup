@@ -10,13 +10,8 @@ BRANCH=master
 BASE_URL=https://github.com/${ORGANIZATION}/${REPOSITORY}
 ARCHIVE=${BASE_URL}/archive/${BRANCH}.zip
 
+echo Source
 . /etc/profile.d/nutanix_env.sh
-
-
-CLUSTER_NAME=' '
-CLUSTER_NAME+=$(ncli cluster get-params | grep 'Cluster Name' \
-              | awk -F: '{print $2}' | tr -d '[:space:]')
-
 
 echo -e "\nNo cache: retrieving ${ARCHIVE} ..."
 curl --remote-name --location ${ARCHIVE} \
