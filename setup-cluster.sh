@@ -31,6 +31,8 @@ centos7_vm_name=CentOS7-VM
 centos7_vm_disk_size=20G
 PRISM_ADMIN=admin
 PE_PASSWORD=nutanix/4u
+CURL_HTTP_OPTS=' --max-time 25 --silent --header Content-Type:application/json --header Accept:application/json  --insecure '
+
 
 # discover available nodes
 echo Discovering nodes ...
@@ -58,14 +60,14 @@ echo Setting cluster time zone ...
 $ncli cluster set-timezone timezone=$timezone force=true
 
 # PC Validate/License
-_test=$(curl -k --user ${PRISM_ADMIN}:${PE_PASSWORD} -X POST --data '{
+_test=$(curl $CURL_HTTP_OPTS --user ${PRISM_ADMIN}:${PE_PASSWORD} -X POST --data '{
     "username": "Huse/Automated",
     "companyName": "Nutanix",
     "jobTitle": "SA"
 }' https://localhost:9440/PrismGateway/services/rest/v1/eulas/accept)
 echo "Validate EULA on PE: _test=|${_test}|"
 
-_test=$(curl -k --user ${PRISM_ADMIN}:${PE_PASSWORD} -X PUT --data '{
+_test=$(curl $CURL_HTTP_OPTS --user ${PRISM_ADMIN}:${PE_PASSWORD} -X PUT --data '{
     "defaultNutanixEmail": null,
     "emailContactList": null,
     "enable": false,
