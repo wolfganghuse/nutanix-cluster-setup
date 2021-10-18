@@ -628,20 +628,8 @@ function pc_configure() {
   args_required 'PC_LAUNCH RELEASE'
   local      _command
   local    _container
-  local _dependencies="global.vars.sh lib.pc.sh ${PC_LAUNCH}"
+  local _dependencies="global.vars.sh lib.common.sh lib.pc.sh ${PC_LAUNCH}"
 
-  # If we are being called via the we-*.sh, we need to change the lib.common.sh to we-lib.common.sh
-  if [[ ${PC_LAUNCH} != *"we-"* ]]; then
-    _dependencies+=" lib.common.sh"
-  else
-    _dependencies+=" we-lib.common.sh"
-  fi
-
-  if [[ -e ${RELEASE} ]]; then
-    _dependencies+=" ${RELEASE}"
-  else
-    log 'Warning: did NOT find '${RELEASE}
-  fi
   log "Send configuration scripts to PC and remove: ${_dependencies}"
   remote_exec 'scp' 'PC' "${_dependencies}" && rm -f ${_dependencies} lib.pe.sh
 
@@ -650,12 +638,6 @@ function pc_configure() {
   log "OPTIONAL: Send binary dependencies to PC: ${_dependencies}"
   remote_exec 'scp' 'PC' "${_dependencies}" 'OPTIONAL'
 
-  for _container in epsilon nucalm ; do
-    if [[ -e ${_container}.tar ]]; then
-      log "Uploading Calm container updates in background..."
-      remote_exec 'SCP' 'PC' ${_container}.tar 'OPTIONAL' &
-    fi
-  done
   #####################################################################################
   ### Handing of to the PC for rest of the installation
   #####################################################################################
