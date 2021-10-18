@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Example use from a Nutanix CVM:
-# curl --remote-name --location https://raw.githubusercontent.com/wolfganghuse/nutanix-cluster-setup/master/bootstrap.sh && sh ${_##*/}
+#curl --remote-name --location https://raw.githubusercontent.com/wolfganghuse/nutanix-cluster-setup/master/bootstrap.sh && sh ${_##*/}
 
 ORGANIZATION=wolfganghuse
 REPOSITORY=nutanix-cluster-setup
