@@ -2,25 +2,28 @@
 
 ncli=/home/nutanix/prism/cli/ncli
 acli=/usr/local/nutanix/bin/acli
-cvm_ips=10.120.100.30,10.120.100.31,10.120.100.32,10.120.100.33
+#cvm_ips=10.120.100.30,10.120.100.31,10.120.100.32,10.120.100.33
+cvm_ips=172.23.2.2
 cluster_name=NTNX-Demo
-cluster_ip=10.120.100.35
-cluster_ds_ip=10.120.100.45
-dns_ip=8.8.8.8
-ntp_server=0.au.pool.ntp.org
-timezone=Australia/Melbourne
+cluster_ip=172.23.1.121
+cluster_ds_ip=172.23.1.122
+dns_ip=172.23.0.23
+ntp_server=time.google.com
+timezone=Europe/Berlin
 sp_name=sp1
-container_name=NTNX-Container
+container_name=Default
 images_container_name=Images
 centos_image=CentOS7-Install
+autodc_image=AutoDC-2.0
 centos_annotation="CentOS7-Installation-ISO"
-centos_source=http://centos.mirror.digitalpacific.com.au/7/isos/x86_64/CentOS-7-x86_64-Minimal-1611.iso
+centos_source=http://iso-store.objects-clu1.ntnx.test/CentOS7-2009.qcow2
+autodc_source=http://iso-store.objects-clu1.ntnx.test/autodc-2.0.qcow2
 vlan_name=vlan.0
 vlan_id=0
-vlan_ip_config=10.120.100.253/24
-dhcp_pool_start=10.120.100.140
-dhcp_pool_end=10.120.100.179
-domain_name=ntnxdemo.local
+vlan_ip_config=172.23.0.0/16
+dhcp_pool_start=172.23.108.140
+dhcp_pool_end=172.23.108.160
+domain_name=ntnxlab.local
 centos7_vm_name=CentOS7-VM
 centos7_vm_disk_size=20G
 
@@ -62,7 +65,11 @@ $ncli container create sp-name="$sp_name" name="$images_container_name" rf="2" e
 
 # create CentOS 7 VM image
 echo Creating CentOS 7 image - this can take a while, depending on your internet connection ...
-$acli image.create "$centos_image" image_type=kIsoImage container="$images_container_name" annotation="$centos_annotation" source_url="$centos_source"
+$acli image.create "$centos_image" image_type=kDiskImage container="$images_container_name" annotation="$centos_annotation" source_url="$centos_source"
+
+# create AutoDC VM image
+echo Creating AutoDC image - this can take a while, depending on your internet connection ...
+$acli image.create "$autodc_image" image_type=kDiskImage container="$images_container_name" annotation="ntnxlab.local AutoDC" source_url="$autodc_source"
 
 # create network
 echo Creating $vlan_name network ...
@@ -71,6 +78,16 @@ echo Adding DHCP pool ...
 $acli net.add_dhcp_pool $vlan_name start=$dhcp_pool_start end=$dhcp_pool_end
 echo Configuring $vlan_name DNS settings ...
 $acli net.update_dhcp_dns $vlan_name domains=$domain_name servers=$dns_ip
+
+# create VMs - AutoDC
+echo Creating AutoDC ...
+$acli vm.create "AutoDC" num_vcpus=2 num_cores_per_vcpu=1 memory=2G
+echo Creating system disk ...
+$acli vm.disk_create "AutoDC" cdrom=true clone_from_image="$autodc_image"
+echo Creating network adapter ...
+$acli vm.nic_create "AutoDC" network=$vlan_name
+echo Powering on AutoDC ...
+$acli vm.on "AutoDC"
 
 # create VMs - CentOS 7
 echo Creating CentOS 7 VM ...
