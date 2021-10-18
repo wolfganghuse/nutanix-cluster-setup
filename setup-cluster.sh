@@ -1,8 +1,11 @@
 #!/bin/sh
-curl --remote-name --location https://raw.githubusercontent.com/wolfganghuse/nutanix-cluster-setup/master/scripts/lib.common.sh
 
 #source functions
+curl --remote-name --location https://raw.githubusercontent.com/wolfganghuse/nutanix-cluster-setup/master/scripts/lib.common.sh
+curl --remote-name --location https://raw.githubusercontent.com/wolfganghuse/nutanix-cluster-setup/master/scripts/lib.pe.sh
+
 . lib.common.sh
+. lib.pe.sh
 ##run from CVM:
 ## curl --remote-name --location https://raw.githubusercontent.com/wolfganghuse/nutanix-cluster-setup/master/setup-cluster.sh && sh ${_##*/}
 
@@ -134,9 +137,7 @@ $acli vm.on "AutoDC"
 
 
 # Upload PC-Bits
-      elif [[ "${PC_VERSION}" == "${PC_CURRENT_VERSION}" ]]; then
-        _meta_url="${PC_CURRENT_METAURL}"
-        _source_url="${PC_CURRENT_URL}"
+
 
 
 
