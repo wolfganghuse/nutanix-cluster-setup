@@ -13,18 +13,6 @@ ARCHIVE=${BASE_URL}/archive/${BRANCH}.zip
 . /etc/profile.d/nutanix_env.sh
 
 
-#########################################################################
-### Added to verify user is Nutanix 7/22/2019 from mlavi version of file.
-#########################################################################
-
-  exit ${_ERROR}
-elif [[ $(whoami) != 'nutanix' ]]; then
-  _ERROR=50
-  echo "PBC-50: This guardrail can be relaxed with proper testing for the future."
-  echo "Error ${_ERROR}: This script should be run as user nutanix!"
-  exit ${_ERROR}
-fi
-
 CLUSTER_NAME=' '
 CLUSTER_NAME+=$(ncli cluster get-params | grep 'Cluster Name' \
               | awk -F: '{print $2}' | tr -d '[:space:]')
