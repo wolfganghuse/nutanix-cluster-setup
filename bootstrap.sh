@@ -18,8 +18,8 @@ curl --remote-name --location ${ARCHIVE} \
 && echo "Success: ${ARCHIVE##*/}" \
 && unzip ${ARCHIVE##*/}
 
-pushd ${REPOSITORY}-${BRANCH}/ \
-  && chmod -R u+x *.sh
+pushd ${REPOSITORY}-${BRANCH}/
+chmod -R u+x *.sh
 
 
 echo -e "\nStarting stage_cluster.sh for ${EMAIL} with ${PRISM_ADMIN}:passwordNotShown@${PE_HOST} ...\n"
