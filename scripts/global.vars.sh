@@ -66,6 +66,6 @@ AUTODC_REPOS=(\
 SSHPASS_REPOS=(\
        'http://mirror.centos.org/centos/7/extras/x86_64/Packages/sshpass-1.06-2.el7.x86_64.rpm' \
     )
-PC_CURRENT_METAURL='http://iso-store.objects-clu1.ntnx.test/pc.2021.9-metadata.json'
-PC_CURRENT_URL='http://iso-store.objects-clu1.ntnx.test/pc.2021.9.tar'
+PC_STABLE_METAURL='http://iso-store.objects-clu1.ntnx.test/pc.2021.9-metadata.json'
+PC_STABLE_URL='http://iso-store.objects-clu1.ntnx.test/pc.2021.9.tar'
 

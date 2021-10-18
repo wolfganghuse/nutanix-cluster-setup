@@ -552,31 +552,10 @@ function ntnx_download() {
     PC | pc | PRISM_CENTRAL_DEPLOY )
       args_required 'PC_VERSION'
 
-      if [[ "${PC_VERSION}" == "${PC_DEV_VERSION}" ]]; then
-        _meta_url="${PC_DEV_METAURL}"
-        _source_url="${PC_DEV_URL}"
-      elif [[ "${PC_VERSION}" == "${PC_CURRENT_VERSION}" ]]; then
-        _meta_url="${PC_CURRENT_METAURL}"
-        _source_url="${PC_CURRENT_URL}"
-      else
-        _meta_url="${PC_STABLE_METAURL}"
-        _source_url="${PC_STABLE_URL}"
-      fi
-
-      #if [[ -z ${_meta_url} ]]; then
-      #  _error=22
-      #  log "Error ${_error}: unsupported PC_VERSION=${PC_VERSION}!"
-      #  log 'Sync the following to global.var.sh...'
-      #  log 'Browse to https://portal.nutanix.com/#/page/releases/prismDetails'
-      #  log " - Find ${PC_VERSION} in the Additional Releases section on the lower right side"
-      #  log ' - Provide the metadata URL for the "PC 1-click deploy from PE" option to this function, both case stanzas.'
-      #  exit ${_error}
-      #fi
-
-      #if [[ ! -z ${PC_URL} ]]; then
-      #  _source_url="${PC_URL}"
-      #fi
-      ;;
+      _meta_url="${PC_STABLE_METAURL}"
+      _source_url="${PC_STABLE_URL}"
+      
+    ;;
     'NOS' | 'nos' | 'AOS' | 'aos')
       # TODO:70 nos is a prototype
       args_required 'AOS_VERSION AOS_UPGRADE'
