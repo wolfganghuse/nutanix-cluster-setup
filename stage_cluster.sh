@@ -20,9 +20,8 @@ function stage_clusters() {
  
   export PC_VERSION="${PC_STABLE_VERSION}"
 
-  echo stagefunction
   _libraries+='lib.pe.sh lib.pc.sh'
-  _pe_launch='setup-cluster.sh'
+  _pe_launch='basic_setup.sh'
   _pc_launch=${_pe_launch}
   
   dependencies 'install' 'sshpass'
