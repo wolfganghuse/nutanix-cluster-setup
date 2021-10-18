@@ -15,13 +15,13 @@ acli=/usr/local/nutanix/bin/acli
 cvm_ips=172.23.2.2
 cluster_name=NTNX-Demo
 cluster_ip=172.23.1.121
-cluster_ds_ip=172.23.1.122
+DATA_SERVICE_IP=172.23.1.122
 dns_ip=172.23.0.23
 ntp_server=time.google.com
 timezone=Europe/Berlin
-sp_name=sp1
-container_name=Default
-images_container_name=Images
+STORAGE_POOL=sp1
+STORAGE_DEFAULT=Default
+STORAGE_IMAGES=Images
 centos_image=CentOS7-Install
 autodc_image=AutoDC-2.0
 centos_annotation="CentOS7-Installation-ISO"
@@ -29,19 +29,25 @@ centos_source=http://iso-store.objects-clu1.ntnx.test/CentOS7-2009.qcow2
 autodc_source=http://iso-store.objects-clu1.ntnx.test/autodc-2.0.qcow2
 pc_metadata=http://iso-store.objects-clu1.ntnx.test/pc.2021.9-metadata.json
 pc_bits=http://iso-store.objects-clu1.ntnx.test/pc.2021.9.tar
-vlan_name=vlan.0
-vlan_id=0
-vlan_ip_config=172.23.0.1/16
-dhcp_pool_start=172.23.108.140
-dhcp_pool_end=172.23.108.160
-domain_name=ntnxlab.local
+NW1_NAME='Primary'
+NW1_VLAN=0
+NW1_SUBNET="172.23.0.0/16"
+NW1_GATEWAY="172.23.0.1"
+NW1_DHCP_START="172.23.108.140"
+NW1_DHCP_END="172.23.108.140"
+
 centos7_vm_name=CentOS7-VM
 centos7_vm_disk_size=20G
 PRISM_ADMIN=admin
 PE_PASSWORD=nx2Tech100!
 PE_DEFAULTPW=Nutanix/4u
 CURL_HTTP_OPTS=' --max-time 25 --silent --header Content-Type:application/json --header Accept:application/json  --insecure '
-
+EMAIL=wolfgang@nutanix.com
+SMTP_SERVER_ADDRESS=1.1.1.1
+SMTP_SERVER_FROM=wolfgang@nutanix.com
+SMTP_SERVER_PORT=25
+ATTEMPTS=40
+SLEEP=60
 
 # discover available nodes
 echo Discovering nodes ...
@@ -55,6 +61,17 @@ echo Creating cluster ...
 echo Pausing for 30s while Prism services start ...
 sleep 30s
 
+#pe_init
+pe_license \
+&& pe_init \
+&& network_configure
+
+pc_install "${NW1_NAME}" \
+&& prism_check 'PC'
+
+exit 
+
+pause
 # rename cluster
 echo Setting cluster name, adding cluster external IP address and adding cluster external data services IP address ...
 $ncli cluster edit-params new-name="$cluster_name" external-ip-address="$cluster_ip" external-data-services-ip-address="$cluster_ds_ip"
