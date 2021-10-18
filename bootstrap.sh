@@ -19,12 +19,13 @@ curl --remote-name --location ${ARCHIVE} \
 && unzip ${ARCHIVE##*/}
 
 pushd ${REPOSITORY}-${BRANCH}/
+pwd
 chmod -R u+x *.sh
-
+pwd
 
 echo -e "\nStarting stage_cluster.sh for ${EMAIL} with ${PRISM_ADMIN}:passwordNotShown@${PE_HOST} ...\n"
 
-
+ls -al
 EMAIL=${EMAIL} \
 PE_HOST=${PE_HOST} \
 PRISM_ADMIN=${PRISM_ADMIN} \
