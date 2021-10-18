@@ -37,29 +37,20 @@ function authentication_source() {
 
   case "${AUTH_SERVER}" in
     'AutoDC')
-      local    _autodc_auth
-      local   _autodc_index=1
-      local _autodc_release=1
-      local _autodc_service='samba-ad-dc'
-      local _autodc_restart="service ${_autodc_service} restart"
-      local  _autodc_status="systemctl show ${_autodc_service} --property=SubState"
-      local _autodc_success='SubState=running'
-
-      _autodc_auth=" --username=${AUTH_ADMIN_USER} --password=${AUTH_ADMIN_PASS}"
-      _autodc_index=''
-      _autodc_release=2
-      _autodc_service=samba
-      _autodc_restart="sleep 2 && service ${_autodc_service} stop && sleep 5 && service ${_autodc_service} start"
-      _autodc_status="service ${_autodc_service} status"
-      _autodc_success=' * status: started'
+      local    _autodc_auth=" --username=${AUTH_ADMIN_USER} --password=${AUTH_ADMIN_PASS}"
+      local _autodc_release=2
+      local _autodc_service=samba
+      local _autodc_restart="sleep 2 && service ${_autodc_service} stop && sleep 5 && service ${_autodc_service} start"
+      local  _autodc_status="service ${_autodc_service} status"
+      local _autodc_success=' * status: started'
     
-      dns_check "dc${_autodc_index}.${AUTH_FQDN}"
+      dns_check "dc.${AUTH_FQDN}"
       _result=$?
 
       if (( ${_result} == 0 )); then
-        log "${AUTH_SERVER}${_autodc_release}.IDEMPOTENCY: dc${_autodc_index}.${AUTH_FQDN} set, skip. ${_result}"
+        log "${AUTH_SERVER}${_autodc_release}.IDEMPOTENCY: dc.${AUTH_FQDN} set, skip. ${_result}"
       else
-        log "${AUTH_SERVER}${_autodc_release}.IDEMPOTENCY failed, no DNS record dc${_autodc_index}.${AUTH_FQDN}"
+        log "${AUTH_SERVER}${_autodc_release}.IDEMPOTENCY failed, no DNS record dc.${AUTH_FQDN}"
 
         _error=12
          _loop=0
@@ -118,15 +109,15 @@ function authentication_source() {
         while true ; do
           (( _loop++ ))
           remote_exec 'SSH' 'AUTH_SERVER' \
-            "samba-tool dns zonecreate dc${_autodc_index} ${OCTET[2]}.${OCTET[1]}.${OCTET[0]}.in-addr.arpa ${_autodc_auth} && ${_autodc_restart}" \
+            "samba-tool dns zonecreate dc ${OCTET[2]}.${OCTET[1]}.${OCTET[0]}.in-addr.arpa ${_autodc_auth} && ${_autodc_restart}" \
             'OPTIONAL'
           sleep ${_sleep}
 
-          dns_check "dc${_autodc_index}.${AUTH_FQDN}"
+          dns_check "dc.${AUTH_FQDN}"
           _result=$?
 
           if (( ${_result} == 0 )); then
-            log "Success: DNS record dc${_autodc_index}.${AUTH_FQDN} set."
+            log "Success: DNS record dc.${AUTH_FQDN} set."
             break
           elif (( ${_loop} > ${_attempts} )); then
             if (( ${_autodc_release} < 2 )); then
