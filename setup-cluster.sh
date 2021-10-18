@@ -1,5 +1,8 @@
 #!/bin/sh
 
+##run from CVM:
+## curl --remote-name --location https://raw.githubusercontent.com/wolfganghuse/nutanix-cluster-setup/master/setup-cluster.sh && sh ${_##*/}
+
 ncli=/home/nutanix/prism/cli/ncli
 acli=/usr/local/nutanix/bin/acli
 #cvm_ips=10.120.100.30,10.120.100.31,10.120.100.32,10.120.100.33
@@ -20,12 +23,14 @@ centos_source=http://iso-store.objects-clu1.ntnx.test/CentOS7-2009.qcow2
 autodc_source=http://iso-store.objects-clu1.ntnx.test/autodc-2.0.qcow2
 vlan_name=vlan.0
 vlan_id=0
-vlan_ip_config=172.23.0.0/16
+vlan_ip_config=172.23.0.1/16
 dhcp_pool_start=172.23.108.140
 dhcp_pool_end=172.23.108.160
 domain_name=ntnxlab.local
 centos7_vm_name=CentOS7-VM
 centos7_vm_disk_size=20G
+PRISM_ADMIN=admin
+PE_PASSWORD=nutanix/4u
 
 # discover available nodes
 echo Discovering nodes ...
@@ -50,18 +55,45 @@ $ncli cluster add-to-ntp-servers servers="$ntp_server"
 
 # set cluster timezone
 echo Setting cluster time zone ...
-$ncli cluster set-timezone timezone=$timezone
+$ncli cluster set-timezone timezone=$timezone force=true
+
+# PC Validate/License
+_test=$(curl -k --user ${PRISM_ADMIN}:${PE_PASSWORD} -X POST --data '{
+    "username": "Huse/Automated",
+    "companyName": "Nutanix",
+    "jobTitle": "SA"
+}' https://localhost:9440/PrismGateway/services/rest/v1/eulas/accept)
+echo "Validate EULA on PE: _test=|${_test}|"
+
+_test=$(curl -k --user ${PRISM_ADMIN}:${PE_PASSWORD} -X PUT --data '{
+    "defaultNutanixEmail": null,
+    "emailContactList": null,
+    "enable": false,
+    "enableDefaultNutanixEmail": false,
+    "isPulsePromptNeeded": false,
+    "nosVersion": null,
+    "remindLater": null,
+    "verbosityType": null
+}' https://localhost:9440/PrismGateway/services/rest/v1/pulse)
+echo "Disable Pulse in PE: _test=|${_test}|"
+
+
 
 # rename default storage pool
 echo Renaming default storage pool ...
-$ncli sp edit name=`$ncli sp ls | sed -n 4p | awk -F": " '{print $NF}'` new-name="$sp_name"
+default_sp=$(ncli storagepool ls | grep 'Name' | cut -d ':' -f 2 | sed s/' '//g)
+ncli sp edit name="${default_sp}" new-name="${sp_name}"
 
 # rename default container
-echo Renaming default container ...
-$ncli ctr edit name=`$ncli ctr ls | sed -n 5p | awk -F": " '{print $NF}'` new-name="$container_name"
+default_container=$(ncli container ls | grep -P '^(?!.*VStore Name).*Name' | cut -d ':' -f 2 | sed s/' '//g | grep '^default-container-')
+ncli container edit name="${default_container}" new-name="${container_name}"
 
 # creating container for storing images
-$ncli container create sp-name="$sp_name" name="$images_container_name" rf="2" enable-compression="true" fingerprint-on-write="off" on-disk-dedup="off"
+(ncli container ls | grep -P '^(?!.*VStore Name).*Name' \
+    | cut -d ':' -f 2 | sed s/' '//g | grep "^${images_container_name}" > /dev/null 2>&1) \
+    && log "Container ${images_container_name} exists" \
+    || ncli container create name="${images_container_name}" sp-name="${sp_name}"
+
 
 # create CentOS 7 VM image
 echo Creating CentOS 7 image - this can take a while, depending on your internet connection ...
