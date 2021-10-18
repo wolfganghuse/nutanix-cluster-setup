@@ -1,15 +1,21 @@
 #!/bin/sh
 ##howto run from CVM:
 ## curl --remote-name --location https://raw.githubusercontent.com/wolfganghuse/nutanix-cluster-setup/master/setup-cluster.sh && sh ${_##*/}
+REPOSITORY=nutanix-cluster-setup
+BRANCH=master
+ARCHIVE=https://github.com/wolfganghuse/${REPOSITORY}/archive/${BRANCH}.zip
 
+curl --remote-name --location ${ARCHIVE} \
+  && echo "Success: ${ARCHIVE##*/}" \
+  && unzip ${ARCHIVE##*/}
+
+pushd ${REPOSITORY}-${BRANCH}/ \
+&& chmod -R u+x *.sh
 
 # Source Nutanix environment (PATH + aliases), then common routines + global variables
-curl --remote-name --location https://raw.githubusercontent.com/wolfganghuse/nutanix-cluster-setup/master/scripts/lib.common.sh
-curl --remote-name --location https://raw.githubusercontent.com/wolfganghuse/nutanix-cluster-setup/master/scripts/lib.pe.sh
-pwd
 . /etc/profile.d/nutanix_env.sh
-. lib.common.sh
-. lib.pe.sh
+. ${REPOSITORY}-${BRANCH}/scripts/lib.common.sh
+. ${REPOSITORY}-${BRANCH}/scripts/lib.pe.sh
 
 ncli=/home/nutanix/prism/cli/ncli
 acli=/usr/local/nutanix/bin/acli
