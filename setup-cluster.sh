@@ -6,7 +6,7 @@
 # Source Nutanix environment (PATH + aliases), then common routines + global variables
 curl --remote-name --location https://raw.githubusercontent.com/wolfganghuse/nutanix-cluster-setup/master/scripts/lib.common.sh
 curl --remote-name --location https://raw.githubusercontent.com/wolfganghuse/nutanix-cluster-setup/master/scripts/lib.pe.sh
-
+pwd
 . /etc/profile.d/nutanix_env.sh
 . lib.common.sh
 . lib.pe.sh
