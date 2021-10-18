@@ -1,5 +1,8 @@
 #!/bin/sh
+curl --remote-name --location https://raw.githubusercontent.com/wolfganghuse/nutanix-cluster-setup/master/scripts/lib.common.sh
 
+#source functions
+. lib.common.sh
 ##run from CVM:
 ## curl --remote-name --location https://raw.githubusercontent.com/wolfganghuse/nutanix-cluster-setup/master/setup-cluster.sh && sh ${_##*/}
 
@@ -21,6 +24,8 @@ autodc_image=AutoDC-2.0
 centos_annotation="CentOS7-Installation-ISO"
 centos_source=http://iso-store.objects-clu1.ntnx.test/CentOS7-2009.qcow2
 autodc_source=http://iso-store.objects-clu1.ntnx.test/autodc-2.0.qcow2
+pc_metadata=http://iso-store.objects-clu1.ntnx.test/pc.2021.9-metadata.json
+pc_bits=http://iso-store.objects-clu1.ntnx.test/pc.2021.9.tar
 vlan_name=vlan.0
 vlan_id=0
 vlan_ip_config=172.23.0.1/16
@@ -127,16 +132,24 @@ $acli vm.nic_create "AutoDC" network=$vlan_name
 echo Powering on AutoDC ...
 $acli vm.on "AutoDC"
 
+
+# Upload PC-Bits
+      elif [[ "${PC_VERSION}" == "${PC_CURRENT_VERSION}" ]]; then
+        _meta_url="${PC_CURRENT_METAURL}"
+        _source_url="${PC_CURRENT_URL}"
+
+
+
 # create VMs - CentOS 7
-echo Creating CentOS 7 VM ...
-$acli vm.create $centos7_vm_name num_vcpus=1 num_cores_per_vcpu=1 memory=1G
-echo Attaching CDROM device ...
-$acli vm.disk_create $centos7_vm_name cdrom=true clone_from_image="$centos_image"
-echo Creating system disk ...
-$acli vm.disk_create $centos7_vm_name create_size=$centos7_vm_disk_size container="$container_name"
-echo Creating network adapter ...
-$acli vm.nic_create $centos7_vm_name network=$vlan_name
-echo Powering on CentOS 7 VM ...
-$acli vm.on $centos7_vm_name
+#echo Creating CentOS 7 VM ...
+#$acli vm.create $centos7_vm_name num_vcpus=1 num_cores_per_vcpu=1 memory=1G
+#echo Attaching CDROM device ...
+#$acli vm.disk_create $centos7_vm_name cdrom=true clone_from_image="$centos_image"
+#echo Creating system disk ...
+#$acli vm.disk_create $centos7_vm_name create_size=$centos7_vm_disk_size container="$container_name"
+#echo Creating network adapter ...
+#$acli vm.nic_create $centos7_vm_name network=$vlan_name
+#echo Powering on CentOS 7 VM ...
+#$acli vm.on $centos7_vm_name
 
 echo Done!
