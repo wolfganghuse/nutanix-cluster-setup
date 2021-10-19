@@ -1,6 +1,7 @@
 ncli=/home/nutanix/prism/cli/ncli
 cvm_ips="172.23.2.2"
 dns_ip="172.23.0.23"
+PE_HOST="172.23.1.121"
 PE_DEFAULTPW=Nutanix/4u
 PE_PASSWORD=nx2Tech100!
 
@@ -15,6 +16,7 @@ sleep 30s
 # Change default Credential
 $ncli user change-password current-password="${PE_DEFAULTPW}" new-password="${PE_PASSWORD}"
 
+$ncli cluster edit-params external-ip-address=$PE_HOST
 # specify DNS and NTP servers
 echo Adding DNS and NTP servers ...
 $ncli cluster add-to-name-servers servers=$dns_ip
@@ -30,6 +32,8 @@ exit
 #centos7_vm_name=CentOS7-VM
 #centos7_vm_disk_size=20G
 
+#Name, IP-Settings
+$ncli cluster edit-params new-name="$cluster_name" external-ip-address="$PE_HOST" external-data-services-ip-address="$DATA_SERVICE_IP"
 # rename default storage pool
 echo Renaming default storage pool ...
 default_sp=$(ncli storagepool ls | grep 'Name' | cut -d ':' -f 2 | sed s/' '//g)
