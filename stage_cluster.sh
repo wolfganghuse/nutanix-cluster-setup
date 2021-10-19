@@ -68,5 +68,4 @@ function validate_clusters() {
 
 #__main__
 
-echo Start Stage
 stage_clusters

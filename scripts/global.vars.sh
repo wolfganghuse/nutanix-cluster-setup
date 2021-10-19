@@ -34,7 +34,6 @@ PE_DEFAULTPW=Nutanix/4u
 NTNX_INIT_PASSWORD='nutanix/4u'
 PC_VERSION='pc.2021.9'
 PC_STABLE_VERSION='pc.2021.9'
-PC_LAUNCH='setup-pc.sh'
 CURL_HTTP_OPTS=' --max-time 25 --silent --header Content-Type:application/json --header Accept:application/json  --insecure '
 EMAIL=wolfgang@nutanix.com
 SMTP_SERVER_ADDRESS=1.1.1.1
