@@ -1,21 +1,8 @@
-#!/bin/sh
-ARCHIVE=https://github.com/wolfganghuse/${REPOSITORY}/archive/${BRANCH}.zip
-
-curl --remote-name --location ${ARCHIVE} \
-  && echo "Success: ${ARCHIVE##*/}" \
-  && unzip -j ${ARCHIVE##*/}
-
-chmod u+x *.sh
-
-# Source Nutanix environment (PATH + aliases), then common routines + global variables
-. /etc/profile.d/nutanix_env.sh
-. global.vars.sh
-. lib.common.sh
-. lib.pe.sh
-
-# discover available nodes
-echo Discovering nodes ...
-#/usr/local/nutanix/cluster/bin/discover_nodes
+ncli=/home/nutanix/prism/cli/ncli
+cvm_ips="172.23.2.2"
+dns_ip="172.23.0.23"
+PE_DEFAULTPW=Nutanix/4u
+PE_PASSWORD=nx2Tech100!
 
 # create cluster
 echo Creating cluster ...
@@ -28,87 +15,20 @@ sleep 30s
 # Change default Credential
 $ncli user change-password current-password="${PE_DEFAULTPW}" new-password="${PE_PASSWORD}"
 
-#pe_init
-dependencies 'install' 'sshpass' && dependencies 'install' 'jq' \
-pe_license \
-&& pe_init \
-&& network_configure \
-&& authentication_source \
-&& pe_auth
-
-if (( $? == 0 )) ; then
-    pc_install "${NW1_NAME}" \
-    && prism_check 'PC' \
-
-    if (( $? == 0 )) ; then
-        _command="EMAIL=${EMAIL} \
-        PC_HOST=${PC_HOST} PE_HOST=${PE_HOST} PE_PASSWORD=${PE_PASSWORD} \
-        PC_LAUNCH=${PC_LAUNCH} PC_VERSION=${PC_VERSION} nohup bash ${HOME}/${PC_LAUNCH} IMAGES"
-
-    cluster_check \
-    && log "Remote asynchroneous PC Image import script... ${_command}" \
-    && remote_exec 'ssh' 'PC' "${_command} >> ${HOME}/${PC_LAUNCH%%.sh}.log 2>&1 &" &
-
-    pc_configure \
-    && log "PC Configuration complete: Waiting for PC deployment to complete, API is up!"
-    log "PE = https://${PE_HOST}:9440"
-    log "PC = https://${PC_HOST}:9440"
-
-    files_install && sleep 30
-
-    create_file_server "${NW1_NAME}" "${NW2_NAME}" && sleep 30
-
-    file_analytics_install && sleep 30 && dependencies 'remove' 'jq' & # parallel, optional. Versus: $0 'files' &
-    #dependencies 'remove' 'sshpass'
-    finish
-    fi
-else
-    finish
-    _error=18
-    log "Error ${_error}: in main functional chain, exit!"
-    exit ${_error}
-fi
-
-exit 
-
-pause
-# rename cluster
-echo Setting cluster name, adding cluster external IP address and adding cluster external data services IP address ...
-$ncli cluster edit-params new-name="$cluster_name" external-ip-address="$PE_HOST" external-data-services-ip-address="$DATA_SERVICE_IP"
-
 # specify DNS and NTP servers
 echo Adding DNS and NTP servers ...
-$ncli cluster add-to-name-servers servers="$dns_ip"
-$ncli cluster add-to-ntp-servers servers="$ntp_server"
+$ncli cluster add-to-name-servers servers=$dns_ip
 
-# set cluster timezone
-echo Setting cluster time zone ...
-$ncli cluster set-timezone timezone=$timezone force=true
+exit 
+# Additional settings, not needed here
 
-# Change default Credential
-$ncli user change-password current-password="${PE_DEFAULTPW}" new-password="${PE_PASSWORD}"
-
-# PE Validate/License
-_test=$(curl $CURL_HTTP_OPTS --user ${PRISM_ADMIN}:${PE_PASSWORD} -X POST --data '{
-    "username": "Huse/Automated",
-    "companyName": "Nutanix",
-    "jobTitle": "SA"
-}' https://localhost:9440/PrismGateway/services/rest/v1/eulas/accept)
-echo "Validate EULA on PE: _test=|${_test}|"
-
-_test=$(curl $CURL_HTTP_OPTS --user ${PRISM_ADMIN}:${PE_PASSWORD} -X PUT --data '{
-    "defaultNutanixEmail": null,
-    "emailContactList": null,
-    "enable": false,
-    "enableDefaultNutanixEmail": false,
-    "isPulsePromptNeeded": false,
-    "nosVersion": null,
-    "remindLater": null,
-    "verbosityType": null
-}' https://localhost:9440/PrismGateway/services/rest/v1/pulse)
-echo "Disable Pulse in PE: _test=|${_test}|"
-
-
+#timezone=Europe/Berlin
+#acli=/usr/local/nutanix/bin/acli
+#centos_image=CentOS7-Install
+#centos_annotation="CentOS7-Installation-ISO"
+#centos_source=http://iso-store.objects-clu1.ntnx.test/CentOS7-2009.qcow2
+#centos7_vm_name=CentOS7-VM
+#centos7_vm_disk_size=20G
 
 # rename default storage pool
 echo Renaming default storage pool ...

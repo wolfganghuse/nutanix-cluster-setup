@@ -1,17 +1,11 @@
-ncli=/home/nutanix/prism/cli/ncli
-acli=/usr/local/nutanix/bin/acli
 
 CLUSTER_NAME=NTNX-Demo
 PE_HOST=172.23.1.121
 PC_HOST=172.23.1.123
 DATA_SERVICE_IP=172.23.1.122
-timezone=Europe/Berlin
 STORAGE_POOL=sp1
 STORAGE_DEFAULT=Default
 STORAGE_IMAGES=Images
-centos_image=CentOS7-Install
-centos_annotation="CentOS7-Installation-ISO"
-centos_source=http://iso-store.objects-clu1.ntnx.test/CentOS7-2009.qcow2
 SSH_PUBKEY="${HOME}/.ssh/id_rsa.pub"
 OCTET=(${PE_HOST//./ }) # zero index
 
@@ -34,8 +28,6 @@ AUTH_ADMIN_PASS='nutanix/4u'
 AUTH_ADMIN_GROUP='SSP Admins'
 
 
-centos7_vm_name=CentOS7-VM
-centos7_vm_disk_size=20G
 PRISM_ADMIN=admin
 PE_PASSWORD=nx2Tech100!
 PE_DEFAULTPW=Nutanix/4u
