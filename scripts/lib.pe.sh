@@ -671,7 +671,7 @@ function pc_install() {
   else
     log "Get cluster network and storage container UUIDs..."
     _nw_uuid=$(acli "net.get ${_nw_name}" \
-      | grep "uuid" | cut -f 2 -d ':' | xargs)
+      | grep " uuid" | cut -f 2 -d ':' | xargs)
     _storage_default_uuid=$(ncli container ls name=${STORAGE_IMAGES} \
       | grep Uuid | grep -v Pool | cut -f 2 -d ':' | xargs)
     #_storage_default_uuid=$(ncli container ls name=${STORAGE_DEFAULT} \
