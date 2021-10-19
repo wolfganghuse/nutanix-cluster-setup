@@ -123,10 +123,10 @@ case ${1} in
     && lcm \
     && pc_project \
     && flow_enable \
-    && pc_cluster_img_import \
-    && images \
     && prism_check 'PC'
-
+    ##&& pc_cluster_img_import \
+    ##&& images \
+    
     log "Non-blocking functions (in development) follow."
     #pc_project
     pc_admin
