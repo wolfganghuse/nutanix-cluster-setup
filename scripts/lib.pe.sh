@@ -625,13 +625,13 @@ function cluster_check() {
 ###############################################################################################################################################################################
 
 function pc_configure() {
-  args_required 'PC_LAUNCH RELEASE'
+  args_required 'PC_LAUNCH'
   local      _command
   local    _container
   local _dependencies="global.vars.sh lib.common.sh lib.pc.sh ${PC_LAUNCH}"
 
   log "Send configuration scripts to PC and remove: ${_dependencies}"
-  remote_exec 'scp' 'PC' "${_dependencies}" && rm -f ${_dependencies} lib.pe.sh
+  remote_exec 'scp' 'PC' "${_dependencies}" && /bin/rm -f ${_dependencies} lib.pe.sh
 
   _dependencies="bin/${JQ_REPOS[0]##*/} ${SSHPASS_REPOS[0]##*/} id_rsa.pub"
 
