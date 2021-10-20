@@ -859,28 +859,6 @@ function pc_ui() {
   local       _json
   local _pc_version
   local       _test
-#{"type":"WELCOME_BANNER","username":"system_data","key":"welcome_banner_content","value":"${PRISM_ADMIN}:${PE_PASSWORD}@${CLUSTER_NAME}"} \
-  _json=$(cat <<EOF
-{"type":"custom_login_screen","key":"color_in","value":"#ADD100"} \
-{"type":"custom_login_screen","key":"color_out","value":"#11A3D7"} \
-{"type":"custom_login_screen","key":"product_title","value":"${CLUSTER_NAME},PC-${PC_VERSION}"} \
-{"type":"custom_login_screen","key":"title","value":"Nutanix.HandsOnWorkshops.com,@${AUTH_FQDN}"} \
-{"type":"WELCOME_BANNER","username":"system_data","key":"welcome_banner_status","value":true} \
-{"type":"WELCOME_BANNER","username":"system_data","key":"welcome_banner_content","value":"${PRISM_ADMIN}:${PE_PASSWORD}"} \
-{"type":"WELCOME_BANNER","username":"system_data","key":"disable_video","value":true} \
-{"type":"UI_CONFIG","username":"system_data","key":"disable_2048","value":true} \
-{"type":"UI_CONFIG","key":"autoLogoutGlobal","value":7200000} \
-{"type":"UI_CONFIG","key":"autoLogoutOverride","value":0} \
-{"type":"UI_CONFIG","key":"welcome_banner","value":"https://Nutanix.HandsOnWorkshops.com/workshops/6070f10d-3aa0-4c7e-b727-dc554cbc2ddf/start/"}
-EOF
-  )
-
-  for _http_body in ${_json}; do
-    _test=$(curl ${CURL_HTTP_OPTS} \
-      --user ${PRISM_ADMIN}:${PE_PASSWORD} -X POST --data "${_http_body}" \
-      https://localhost:9440/PrismGateway/services/rest/v1/application/system_data)
-    log "_test=|${_test}|${_http_body}"
-  done
 
   _http_body='{"type":"UI_CONFIG","key":"autoLogoutTime","value": 3600000}'
        _test=$(curl ${CURL_HTTP_OPTS} \
@@ -891,23 +869,6 @@ EOF
   # shellcheck disable=2206
   _pc_version=(${PC_VERSION//./ })
 
-  if (( ${_pc_version[0]} >= 5 && ${_pc_version[1]} >= 10 && ${_test} != 500 )); then
-    log "PC_VERSION ${PC_VERSION} >= 5.10, setting favorites..."
-
-    _json=$(cat <<EOF
-{"complete_query":"Karbon","route":"ebrowser/k8_cluster_entitys"} \
-{"complete_query":"Images","route":"ebrowser/image_infos"} \
-{"complete_query":"Projects","route":"ebrowser/projects"} \
-{"complete_query":"Calm","route":"calm"}
-EOF
-    )
-
-    for _http_body in ${_json}; do
-      _test=$(curl ${CURL_HTTP_OPTS} --user ${PRISM_ADMIN}:${PE_PASSWORD} -X POST --data "${_http_body}" \
-        https://localhost:9440/api/nutanix/v3/search/favorites)
-      log "favs _test=|${_test}|${_http_body}"
-    done
-  fi
 }
 
 #########################################################################################################################################

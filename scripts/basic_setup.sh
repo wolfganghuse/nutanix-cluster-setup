@@ -116,9 +116,8 @@ case ${1} in
     && pc_dns_add \
     && pc_ui \
     && pc_auth \
-    && pc_smtp
-
-    ssp_auth \
+    && pc_smtp \
+    && ssp_auth \
     && calm_enable \
     && lcm \
     && pc_project \

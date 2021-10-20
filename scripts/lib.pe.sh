@@ -692,18 +692,14 @@ function pc_install() {
     fi
 
     log "Deploy Prism Central (typically takes 17+ minutes)..."
-    # TODO:160 make scale-out & dynamic, was: 4vCPU/16GB = 17179869184, 8vCPU/40GB = 42949672960
-    # Sizing suggestions, certified configurations:
-    # https://portal.nutanix.com/#/page/docs/details?targetId=Release-Notes-Prism-Central-v591:sha-pc-scalability-r.html
-
-    # TODO:10 network_configuration.{subnet_mask|default_gateway}
+    # TODO: Going to XLARGE-Config
     HTTP_BODY=$(cat <<EOF
 {
   "resources": {
     "should_auto_register":false,
     "version":"${PC_VERSION}",
     "pc_vm_list":[{
-      "data_disk_size_bytes":536870912000,
+      "data_disk_size_bytes":2684354560000,
       "nic_list":[{
         "network_configuration":{
           "subnet_mask":"${SUBNET_MASK}",
@@ -714,8 +710,8 @@ function pc_install() {
       }],
       "dns_server_ip_list":["${AUTH_HOST}"],
       "container_uuid":"${_storage_default_uuid}",
-      "num_sockets":8,
-      "memory_size_bytes":42949672960,
+      "num_sockets":14,
+      "memory_size_bytes":47244640256,
       "vm_name":"Prism Central ${PC_VERSION}"
     }]
   }
