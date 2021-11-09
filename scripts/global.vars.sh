@@ -52,14 +52,14 @@ DNS_SERVERS='10.20.128.44'
 NTP_SERVERS='0.us.pool.ntp.org,1.us.pool.ntp.org,2.us.pool.ntp.org,3.us.pool.ntp.org'
 OS_NAME='"centos"'
 JQ_REPOS=(\
-        'https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64' \
+        'http://10.20.128.27/isostore/jq-linux64' \
 )
 AUTODC_REPOS=(\
-    'http://iso-store.objects-clu1.ntnx.test/autodc-2.0.qcow2' \
+    'http://10.20.128.27/isostore/autodc-2.0.qcow2' \
 )
 SSHPASS_REPOS=(\
-       'http://mirror.centos.org/centos/7/extras/x86_64/Packages/sshpass-1.06-2.el7.x86_64.rpm' \
+       'http://10.20.128.27/isostore/sshpass-1.06-2.el7.x86_64.rpm' \
     )
-PC_STABLE_METAURL='http://iso-store.objects-clu1.ntnx.test/pc.2021.9-metadata.json'
-PC_STABLE_URL='http://iso-store.objects-clu1.ntnx.test/pc.2021.9.tar'
+PC_STABLE_METAURL='http://10.20.128.27/isostore/pc.2021.9-metadata.json'
+PC_STABLE_URL='http://10.20.128.27/isostore/pc.2021.9.tar'
 
