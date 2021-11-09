@@ -60,6 +60,6 @@ AUTODC_REPOS=(\
 SSHPASS_REPOS=(\
        'http://10.20.128.27/isostore/sshpass-1.06-2.el7.x86_64.rpm' \
     )
-PC_STABLE_METAURL='http://10.20.128.27/isostore/pc.2021.9-metadata.json'
+PC_STABLE_METAURL='http://10.20.128.27/isostore/generated-pc.2021.9-metadata.json'
 PC_STABLE_URL='http://10.20.128.27/isostore/pc.2021.9.tar'
 
