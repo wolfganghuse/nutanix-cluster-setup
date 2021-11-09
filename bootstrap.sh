@@ -5,7 +5,7 @@
 
 ORGANIZATION=wolfganghuse
 REPOSITORY=nutanix-cluster-setup
-BRANCH=master
+BRANCH=kbm
 
 BASE_URL=https://github.com/${ORGANIZATION}/${REPOSITORY}
 ARCHIVE=${BASE_URL}/archive/${BRANCH}.zip
